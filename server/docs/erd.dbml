@@ -1,0 +1,173 @@
+Table Users {
+  id serial
+  email string [unique]
+  isAdmin boolean
+  Indexes {
+    email
+  }
+}
+ 
+Table Sessions {
+  id serial
+  userId integer [ref:> Users.id]
+  token string
+  expiresAt datetime
+  data string [null]
+  Indexes {
+    userId
+    expiresAt
+  }
+}
+  
+Table Accounts {
+  id serial
+  userId integer [ref:> Users.id]
+  wabaId string [unique]
+  timezone string // enum time zones
+  Indexes {
+    userId
+    wabaId
+  }
+}
+
+Table Partners {
+  id serial
+  userId integer [unique, ref:> Users.id]
+  timezone string // enum time zones
+  // Additional partner specific info
+  Indexes {
+    userId
+  }
+}
+
+Table PartnerTokens {
+  id serial
+  partnerId integer [ref:> Partners.id]
+  accountId integer [null, ref:> Accounts.id]
+  value string
+  expiresAt datetime
+  usedAt datetime [null]
+  Indexes {
+    (partnerId, value) [unique]
+  }
+}
+
+Table Managers {
+  id serial
+  partnerId integer [ref:> Partners.id]
+  accountId integer [unique, ref:> Accounts.id]
+  partnerTokenId integer [null, unique, ref:> PartnerTokens.id]
+  certAvailable boolean
+  creditLine string [null]
+  state string // need to draw state machine
+  readyAt datetime [null]
+  Indexes {
+    partnerId
+    accountId
+  }
+}
+
+Table PhoneNumbers {
+  id serial
+  accountId integer [ref:> Accounts.id]
+  value string [unique]
+  certLastCheckedAt datetime [null]
+  certAvailableAt datetime [null]
+  Indexes {
+    accountId
+    value
+  }
+}
+
+// Migrations until here
+
+Table Documents {
+  id serial
+  title string
+  url string
+  Indexes {
+    title
+  }
+}
+
+Table Agreements {
+  id serial
+  managerId integer [ref:> Managers.id]
+  documentId integer [ref:> Documents.id]
+  userSignedAt datetime
+  partnerSignedAt datetime
+  keyreplySignedAt datetime
+  userRequired boolean
+  partnerRequired boolean
+  keyreplyRequired boolean
+  link string
+  Indexes {
+    managerId
+  }
+}
+
+// Table definitions checked to here
+
+Table Rates {
+  id serial
+  isLatest boolean
+  countryCode string // model enum
+  managerId integer [ref:> Managers.id]
+  type string // eg WhatsApp / Telegram
+  // Rates should be copied on agreement 
+  // to freeze as default might change
+  Indexes {
+    managerId
+  }
+}
+
+Table Items {
+  id serial
+  managerId integer [ref:> Managers.id]
+  invoiceId integer [ref:> Invoices.id]
+  usage integer
+  type string // eg Template Message
+}
+
+Table Invoices {
+  id serial
+  managerId integer [ref:> Managers.id]
+  rateId integer [ref:> Rates.id]
+  amount integer
+  currency string
+  Indexes {
+    managerId
+  }
+}
+
+Table PaymentMethods {
+  id serial
+  managerId integer [ref:> Managers.id]
+  processor string // stripe, ayden, paypal
+  last4 string
+  // other displayable credit card values
+  Indexes {
+    managerId
+  }
+}
+
+Table PaymentLogs {
+  id serial
+  invoiceId integer [ref:> Invoices.id]
+  paymentMethodId integer [ref:> PaymentMethods.id]
+  action string // charge or refund etc
+  amount integer
+  currency string
+  chargedAt datetime [null]
+  Indexes {
+    invoiceId
+  }
+}
+
+
+
+
+
+
+
+

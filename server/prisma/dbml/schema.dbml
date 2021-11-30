@@ -1,0 +1,214 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Account {
+  id Int [pk, increment]
+  userId Int [not null]
+  wabaId String [unique, not null]
+  name String
+  businessName String
+  businessId String
+  currency String
+  status String
+  timezone String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  manager Manager
+  partnerToken PartnerToken [not null]
+  phoneNumber PhoneNumber [not null]
+}
+
+Table Manager {
+  id Int [pk, increment]
+  partnerId Int
+  accountId Int [unique, not null]
+  partnerTokenId Int
+  creditLineAllocationConfigId String
+  creditLineState CreditLineState [not null, default: 'NONE']
+  state ManagerState [not null]
+  readyAt DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  account Account [not null]
+  partner Partner
+  partnerToken PartnerToken
+}
+
+Table PartnerToken {
+  id Int [pk, increment]
+  partnerId Int [not null]
+  accountId Int
+  value String [not null]
+  expiresAt DateTime [not null]
+  usedAt DateTime
+  revokedAt DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  account Account
+  partner Partner [not null]
+  managers Manager [not null]
+
+  indexes {
+    (partnerId, value) [unique]
+  }
+}
+
+Table Partner {
+  id Int [pk, increment]
+  userId Int [unique, not null]
+  timezone String [not null]
+  isActivated Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  manager Manager [not null]
+  partnerToken PartnerToken [not null]
+  apiKey ApiKey
+}
+
+Table PhoneNumber {
+  id Int [pk, increment]
+  accountId Int [not null]
+  value String [unique, not null]
+  shortenValue String [unique]
+  nameStatus String
+  qualityRating String
+  verifiedName String
+  status String
+  limit String
+  codeVerificationStatus String
+  phoneNumberId String
+  certLastCheckedAt DateTime
+  certAvailableAt DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  account Account [not null]
+}
+
+Table Session {
+  id Int [pk, increment]
+  userId Int [not null]
+  token String [not null]
+  expiresAt DateTime [not null]
+  data String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+}
+
+Table User {
+  id Int [pk, increment]
+  email String [unique, not null]
+  isAdmin Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  customerId String [not null]
+  uplineUserId Int
+  account Account [not null]
+  partner Partner
+  session Session [not null]
+  status String [not null, default: 'NotInitiated']
+  uplineUser User
+  downlineUsers User [not null]
+}
+
+Table Audit {
+  id Int [pk, increment]
+  action AuditAction [not null]
+  payload String
+  timestamp DateTime [default: `now()`, not null]
+}
+
+Table ApiKey {
+  id Int [pk, increment]
+  value String [unique, not null]
+  partnerId Int [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  isActive Boolean [not null, default: true]
+  partner Partner [not null]
+}
+
+Table WABAMigration {
+  id Int [pk, increment]
+  ownerEmail String
+  partnerEmail String [not null]
+  existingWABAId String [unique, not null]
+  existingWABAName String [not null]
+  newWABAId String [unique, not null]
+  newWABAName String [not null]
+  businessManagerId String [not null]
+  phoneNumbers String [not null]
+  businessVerificationStatus String
+  WABAReviewStatus String
+  twoFADisabled Boolean [not null, default: false]
+  krWABACreated Boolean [not null, default: false]
+  clientConfirm Boolean [not null, default: false]
+  readyForMigration Boolean [not null, default: false]
+  migrationInitiated Boolean [not null, default: false]
+  migrationConfirmed Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Enum ManagerState {
+  IN_PROGRESS
+  VERIFYING
+  VERIFIED
+  READY
+}
+
+Enum CreditLineState {
+  SHARED
+  MANUALLY_REVOKED
+  AUTO_REVOKED
+  NONE
+}
+
+Enum AuditAction {
+  USER_LOGGED_IN
+  USER_LOGGED_OUT
+  USER_CANCEL_FACEBOOK_FLOW
+  WABA_CONNECTION_REQUEST
+  WABA_CONNECT_FAILED
+  WABA_CONNECTED
+  PARTNER_TOKEN_GENERATED
+  PARTNER_TOKEN_DELETED
+  PARTNER_TOKEN_USED
+  PARTNER_PROMOTED
+  PARTNER_ACTIVATED
+  PARTNER_DEACTIVATED
+  CREDIT_LINE_REVOKED
+  CREDIT_LINE_SHARED
+  PHONE_MIGRATION_INIT
+  PHONE_MIGRATION_INIT_FAILED
+  PHONE_MIGRATION_REQUEST_OTP
+  PHONE_MIGRATION_REQUEST_OTP_FAILED
+  PHONE_MIGRATION_VERIFY_OTP
+  PHONE_MIGRATION_VERIFY_OTP_FAILED
+  PRONE_MIGRATION_VERIFIED_OTP
+}
+
+Ref: Account.userId > User.id
+
+Ref: Manager.accountId - Account.id
+
+Ref: Manager.partnerId > Partner.id
+
+Ref: Manager.partnerTokenId > PartnerToken.id
+
+Ref: PartnerToken.accountId > Account.id
+
+Ref: PartnerToken.partnerId > Partner.id
+
+Ref: Partner.userId - User.id
+
+Ref: PhoneNumber.accountId > Account.id
+
+Ref: Session.userId > User.id
+
+Ref: User.uplineUserId - User.id
+
+Ref: ApiKey.partnerId - Partner.id

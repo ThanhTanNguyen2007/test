@@ -1,0 +1,726 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This document provides information for some exposed API from WA Portal",
+        "version": "1.0.0",
+        "title": "Whatsapp Portal API docs",
+        "contact": {
+            "email": "duy@keyreply.com"
+        }
+    },
+    "host": "petstore.swagger.io",
+    "basePath": "/partnerApi",
+    "tags": [{
+            "name": "phoneNumber",
+            "description": "Get cert, status of phone numbers"
+        },
+        {
+            "name": "waba",
+            "description": "Get statuses of WABA"
+        },
+        {
+            "name": "partner",
+            "description": "Get partner information"
+        },
+        {
+            "name": "partnerKey",
+            "description": "Partner key management"
+        },
+        {
+            "name": "user",
+            "description": "Get user information"
+        }
+    ],
+    "schemes": ["https", "http"],
+    "paths": {
+        "/phone-number": {
+            "get": {
+                "tags": ["phoneNumber"],
+                "summary": "Get phone numbers",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "in": "query",
+                    "name": "wabaId",
+                    "description": "ID of WABA to phone numbers",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PhoneNumber"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/phone-number/{phoneNumberId}/cert": {
+            "get": {
+                "tags": ["phoneNumber"],
+                "summary": "Get cert of a phone number",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "phoneNumberId",
+                    "in": "path",
+                    "description": "Phone Number Id of phone number to get cert",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "cert": {
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "type": "string",
+                                    "description": "Phone number"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/phone-number/{phoneNumberId}/status": {
+            "get": {
+                "tags": ["phoneNumber"],
+                "summary": "Get status of a phone number",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "phoneNumberId",
+                    "in": "path",
+                    "description": "Phone Number Id of phone number to get status",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "qualityRating": {
+                                    "type": "string",
+                                    "enum": [
+                                        "PENDING",
+                                        "DELETED",
+                                        "MIGRATED",
+                                        "BANNED",
+                                        "RESTRICTED",
+                                        "RATE_LIMITED",
+                                        "FLAGGED",
+                                        "CONNECTED",
+                                        "DISCONNECTED",
+                                        "UNKNOWN"
+                                    ]
+                                }
+                            },
+                            "example": {
+                                "qualityRating": "High"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/phone-number/{phoneNumberId}/nameStatus": {
+            "get": {
+                "tags": ["phoneNumber"],
+                "summary": "Get status of a Phone number name",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "phoneNumberId",
+                    "in": "path",
+                    "description": "Phone Number Id of phone number to get name status",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "wabaNameStatus": {
+                                    "type": "string",
+                                    "enum": ["Approved", "Declined", "Expired", "Pending Review", "None"]
+                                }
+                            },
+                            "example": {
+                                "wabaNameStatus": "Approved"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/phone-number/{phoneNumberId}/qualityRating": {
+            "get": {
+                "tags": ["phoneNumber"],
+                "summary": "Get quality rating of a phone number",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "phoneNumberId",
+                    "in": "path",
+                    "description": "Phone Number Id of phone number to get quality rating",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "wabaNameStatus": {
+                                    "type": "string",
+                                    "enum": ["High", "Medium", "Low"]
+                                }
+                            },
+                            "example": {
+                                "wabaNameStatus": "High"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/account": {
+            "get": {
+                "tags": ["waba"],
+                "summary": "Get all WABAs belong to partner",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/WABA"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/account/{wabaId}/templateToken": {
+            "get": {
+                "tags": ["waba"],
+                "summary": "Get template token of a WABA",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "wabaId",
+                    "in": "path",
+                    "description": "ID of WABA to get template token",
+                    "required": true,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "token": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": {
+                                "token": "3b51xxxx-xxxx-xxxx-xxxx-xxxxxxxx3ff9"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/account/{wabaId}/status": {
+            "get": {
+                "tags": ["waba"],
+                "summary": "Get status of a WABA",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "wabaId",
+                    "in": "path",
+                    "description": "ID of WABA to get status",
+                    "required": true,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "wabaNameStatus": {
+                                    "type": "string",
+                                    "enum": ["Approved", "Declined", "Expired", "Pending Review", "None"]
+                                }
+                            },
+                            "example": {
+                                "wabaStatus": "Unverified trial"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/account/{wabaId}/enable-credit-line": {
+            "put": {
+                "tags": ["waba"],
+                "summary": "Enable credit line of a WABA",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "wabaId",
+                    "in": "path",
+                    "description": "ID of WABA to share credit line",
+                    "required": true,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/account/{wabaId}/disable-credit-line": {
+            "put": {
+                "tags": ["waba"],
+                "summary": "Disable credit line of a WABA",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "wabaId",
+                    "in": "path",
+                    "description": "ID of WABA to disable credit line",
+                    "required": true,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/partner/embeddedUrl": {
+            "get": {
+                "tags": ["partner"],
+                "summary": "Get embedded urls with latest partner key",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/EmbeddedUrl"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/user/customerId": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Get customerId for email",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "in": "query",
+                    "name": "email",
+                    "description": "Email of user",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string",
+                            "example": "abe6372a-43e6-4539-9fb3-742ed874a787"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/partner-key": {
+            "get": {
+                "tags": ["partnerKey"],
+                "summary": "Get all partner keys belong to partner",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PartnerKey"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            },
+            "post": {
+                "tags": ["partnerKey"],
+                "summary": "Create a partner key belong to partner",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/PartnerKey"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        },
+        "/partner-key/{partnerKeyId}/revoke": {
+            "put": {
+                "tags": ["partnerKey"],
+                "summary": "Remove a partner key belong to partner",
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "partnerKeyId",
+                    "in": "path",
+                    "description": "Id of partner key want to revoke",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/PartnerKey"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [{
+                    "x-api-key": []
+                }]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "x-api-key": {
+            "type": "apiKey",
+            "name": "x-api-key",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "EmbeddedUrl": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                },
+                "usage": {
+                    "type": "integer"
+                },
+                "expiredAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "PhoneNumber": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "value": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "certLastCheckedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "certAvailableAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "PartnerKey": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "partnerId": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "accountId": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "value": {
+                    "type": "string"
+                },
+                "expiresAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "usedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "revokedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "WABA": {
+            "type": "object",
+            "properties": {
+                "wabaId": {
+                    "type": "string"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "phoneNumbers": {
+                    "type": "array"
+                },
+                "ownerEmail": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "businessName": {
+                    "type": "string"
+                },
+                "businessId": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        }
+    }
+}

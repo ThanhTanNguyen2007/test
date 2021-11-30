@@ -1,0 +1,16 @@
+{
+  "folders": [
+		{
+			"path": "dashboard"
+		},
+		{
+			"path": "server"
+		},
+		{
+			"path": "mockAuth0Server"
+		},
+		{
+			"path": "mockFbLoginServer"
+		}
+	]
+}

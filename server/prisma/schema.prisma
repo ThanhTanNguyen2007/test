@@ -1,0 +1,222 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_DATABASE_URL")
+}
+
+model Account {
+  id           Int            @id @default(autoincrement())
+  userId       Int
+  wabaId       String         @unique
+  name         String?
+  businessName String?
+  businessId   String?
+  currency     String?
+  status       String?
+  timezone     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  user         User           @relation(fields: [userId], references: [id])
+  manager      Manager?
+  partnerToken PartnerToken[]
+  phoneNumber  PhoneNumber[]
+
+  @@index([userId])
+  @@index([wabaId])
+}
+
+model Manager {
+  id                           Int           @id @default(autoincrement())
+  partnerId                    Int?
+  accountId                    Int           @unique
+  partnerTokenId               Int?
+  creditLineAllocationConfigId String?
+  creditLineState              CreditLineState @default(NONE)
+  state                        ManagerState
+  readyAt                      DateTime?
+  createdAt                    DateTime      @default(now())
+  updatedAt                    DateTime      @updatedAt
+  account                      Account       @relation(fields: [accountId], references: [id])
+  partner                      Partner?      @relation(fields: [partnerId], references: [id])
+  partnerToken                 PartnerToken? @relation(fields: [partnerTokenId], references: [id])
+
+  @@index([accountId])
+  @@index([partnerId])
+}
+
+enum ManagerState {
+  IN_PROGRESS
+  VERIFYING
+  VERIFIED
+  READY
+}
+
+enum CreditLineState {
+  SHARED
+  MANUALLY_REVOKED
+  AUTO_REVOKED
+  NONE
+}
+
+model PartnerToken {
+  id        Int       @id @default(autoincrement())
+  partnerId Int
+  accountId Int?
+  value     String
+  expiresAt DateTime
+  usedAt    DateTime?
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  account   Account?  @relation(fields: [accountId], references: [id])
+  partner   Partner   @relation(fields: [partnerId], references: [id])
+  managers   Manager[]
+
+  @@unique([partnerId, value])
+  @@index([partnerId, value])
+}
+
+model Partner {
+  id           Int            @id @default(autoincrement())
+  userId       Int            @unique
+  timezone     String
+  isActivated  Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  user         User           @relation(fields: [userId], references: [id])
+  manager      Manager[]
+  partnerToken PartnerToken[]
+  apiKey       ApiKey?
+
+  @@index([userId])
+}
+
+model PhoneNumber {
+  id                     Int       @id @default(autoincrement())
+  accountId              Int
+  value                  String    @unique
+  shortenValue           String?    @unique
+  nameStatus             String?
+  qualityRating          String?
+  verifiedName           String?
+  status                 String?
+  limit                  String?
+  codeVerificationStatus String?
+  phoneNumberId          String?
+  certLastCheckedAt      DateTime?
+  certAvailableAt        DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  account                Account   @relation(fields: [accountId], references: [id])
+
+  @@index([accountId])
+  @@index([value])
+  @@index([shortenValue])
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String
+  expiresAt DateTime
+  data      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([expiresAt])
+  @@index([userId])
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  email             String    @unique
+  isAdmin           Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  customerId        String    @default(uuid())
+  uplineUserId      Int?
+  account           Account[]
+  partner           Partner?
+  session           Session[]
+  status            String    @default("NotInitiated")
+  uplineUser        User?     @relation("UplineDownlineUsers",fields: [uplineUserId], references: [id])
+  downlineUsers     User[]    @relation("UplineDownlineUsers")
+
+  @@index([email])
+}
+
+enum AuditAction {
+  USER_LOGGED_IN
+  USER_LOGGED_OUT
+  USER_CANCEL_FACEBOOK_FLOW
+  WABA_CONNECTION_REQUEST
+  WABA_CONNECT_FAILED
+  WABA_CONNECTED
+  PARTNER_TOKEN_GENERATED
+  PARTNER_TOKEN_DELETED
+  PARTNER_TOKEN_USED
+  PARTNER_PROMOTED
+  PARTNER_ACTIVATED
+  PARTNER_DEACTIVATED
+  CREDIT_LINE_REVOKED
+  CREDIT_LINE_SHARED
+  PHONE_MIGRATION_INIT
+  PHONE_MIGRATION_INIT_FAILED
+  PHONE_MIGRATION_REQUEST_OTP
+  PHONE_MIGRATION_REQUEST_OTP_FAILED
+  PHONE_MIGRATION_VERIFY_OTP
+  PHONE_MIGRATION_VERIFY_OTP_FAILED
+  PRONE_MIGRATION_VERIFIED_OTP
+}
+
+model Audit {
+  id Int @id @default(autoincrement())
+  action AuditAction
+  payload String?
+  timestamp DateTime  @default(now())
+
+  @@index([action])
+}
+
+model ApiKey {
+  id        Int       @id @default(autoincrement())
+  value     String    @unique
+  partnerId Int       @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  isActive  Boolean   @default(true)
+  partner   Partner  @relation(fields: [partnerId], references: [id])
+
+  @@index([partnerId])
+  @@index([value])
+}
+
+model WABAMigration {
+  id                         Int       @id @default(autoincrement())
+  ownerEmail                 String?
+  partnerEmail               String
+  existingWABAId             String    @unique
+  existingWABAName           String
+  newWABAId                  String    @unique
+  newWABAName                String
+  businessManagerId          String
+  phoneNumbers               String[]
+  businessVerificationStatus String?
+  WABAReviewStatus           String?
+  twoFADisabled              Boolean   @default(false)
+  krWABACreated              Boolean   @default(false)
+  clientConfirm              Boolean   @default(false)
+  readyForMigration          Boolean   @default(false)
+  migrationInitiated         Boolean   @default(false)
+  migrationConfirmed         Boolean   @default(false)
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+}

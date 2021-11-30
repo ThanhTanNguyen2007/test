@@ -1,0 +1,34 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+tasks.register("generatePrismaClient", YarnTask) {
+    args = ["generate-prisma-client"]
+}
+
+tasks.register("build", YarnTask) {
+	dependsOn generatePrismaClient
+
+    args = ["build"]
+}
+
+task clean(type: Delete) {
+    delete "build"
+}
+
+// Docker
+String dockerImageTag = "${project.dockerRegistry}/${project.dockerRepo}/server:${rootProject.version}"
+
+tasks.register("buildImage", DockerBuildImage) {
+    images.add(dockerImageTag)
+    inputDir.set(file("."))
+    dockerFile.set(file("Dockerfile"))
+}
+
+tasks.register("pushImage", Exec) {
+	dependsOn buildImage
+
+    commandLine = ["docker", "push", "${dockerImageTag}"]
+}
+
+tasks.register("release") {
+    dependsOn pushImage
+}

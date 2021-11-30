@@ -1,0 +1,13 @@
+@import '~antd/dist/antd.css';
+
+.ant-menu-overflow {
+  justify-content: center;
+}
+
+body {
+  font-size: 12px;
+}
+
+.ant-card {
+  width: 100%;
+}

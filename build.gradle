@@ -1,0 +1,14 @@
+plugins {
+    id "com.cinnober.gradle.semver-git" version "${semverPluginVersion}"
+    id "com.bmuschko.docker-remote-api" version "${dockerRemoteApiPluginVersion}"
+	id "com.github.node-gradle.node" version "${nodeGradlePluginVersion}"
+}
+
+task(getVersion) {
+    println("${project.version}")
+}
+
+subprojects {
+    apply plugin: "com.bmuschko.docker-remote-api"
+    apply plugin: "com.github.node-gradle.node"
+}

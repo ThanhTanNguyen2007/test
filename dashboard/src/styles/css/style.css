@@ -1,0 +1,164 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans','Droid Sans', 'Helvetica Neue';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden; }
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Couries New', monospace; }
+
+.flex {
+  display: flex; }
+  .flex-1 {
+    flex: 1; }
+  .flex-6 {
+    flex: 6; }
+  .flex-jc-sb {
+    justify-content: space-between; }
+  .flex-jc-sa {
+    justify-content: space-around; }
+  .flex-jc-c {
+    justify-content: center; }
+  .flex-jc-s {
+    justify-content: stretch; }
+  .flex-jc-start {
+    justify-content: start; }
+  .flex-jc-end {
+    justify-content: end; }
+  .flex-ai-c {
+    align-items: center; }
+  .flex-ai-s {
+    align-items: stretch; }
+  .flex-dir-c {
+    flex-direction: column; }
+  .flex-dir-r {
+    flex-direction: row; }
+
+.ant-card {
+  min-width: 100%;
+  height: 100vh;
+  border: 0px !important;
+  margin-top: 10px !important;
+  text-align: center !important; }
+
+.ant-btn-small {
+  font-size: 10px !important;
+  height: 18px !important; }
+
+.ant-card-body {
+  max-height: 80%;
+  overflow: auto; }
+
+.mb-10 {
+  margin-bottom: 10px; }
+
+.mb-11 {
+  margin-bottom: 11px; }
+
+.mb-12 {
+  margin-bottom: 12px; }
+
+.mb-13 {
+  margin-bottom: 13px; }
+
+.mb-14 {
+  margin-bottom: 14px; }
+
+.mt-10 {
+  margin-top: 10px; }
+
+.mt-11 {
+  margin-top: 11px; }
+
+.mt-12 {
+  margin-top: 12px; }
+
+.ml-10 {
+  margin-left: 10px; }
+
+.ml-11 {
+  margin-left: 11px; }
+
+.ml-12 {
+  margin-left: 12px; }
+
+.mr-7 {
+  margin-right: 5px; }
+
+.mr-10 {
+  margin-right: 10px; }
+
+.mr-11 {
+  margin-right: 11px; }
+
+.mr-12 {
+  margin-right: 12px; }
+
+.accounts .features-box {
+  margin-bottom: 15px; }
+
+.accounts .export {
+  text-align: right; }
+
+.migration__content {
+  text-align: center;
+  height: 100%; }
+
+.migration__body {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; }
+
+.migration-status .upload {
+  margin-bottom: 10px;
+  width: 100%;
+  text-align: right; }
+
+.partner-tokens .disableRow {
+  background-color: lightgray; }
+
+.partner-tokens .disableRow:hover > td {
+  background-color: lightgray !important; }
+
+.partner-tokens .partner-table {
+  margin-top: 10px; }
+
+.phoneInforModal {
+  content: \u2B24; }
+  .phoneInforModal .ant-btn {
+    font-size: 12px !important;
+    height: 20px !important; }
+
+.topNavBar {
+  overflow: hidden; }
+
+.users .ant-input-search {
+  margin-bottom: 15px; }
+
+.phoneNumbers {
+  content: \u2B24; }
+  .phoneNumbers .features-box {
+    margin-bottom: 15px; }
+  .phoneNumbers .export {
+    text-align: right; }
+  .phoneNumbers .dot {
+    height: 7px;
+    width: 7px;
+    border-radius: 50%;
+    display: inline-block; }
+    .phoneNumbers .dot-green {
+      background-color: #53ff00; }
+    .phoneNumbers .dot-red {
+      background-color: #ff0000; }
+    .phoneNumbers .dot-yellow {
+      background-color: #fffa00; }
+    .phoneNumbers .dot-black {
+      background-color: #000000; }
+
+.login__link {
+  color: #007bff;
+  cursor: pointer;
+  fontWeight: 500; }

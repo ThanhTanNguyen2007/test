@@ -1,0 +1,72 @@
+{
+  "name": "whatsapp-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/charts": "^1.2.14",
+    "@testing-library/jest-dom": "5.11.4",
+    "@testing-library/react": "11.1.0",
+    "@testing-library/user-event": "12.1.10",
+    "@types/jest": "26.0.15",
+    "@types/node": "12.0.0",
+    "@types/react": "16.9.53",
+    "@types/react-dom": "16.9.8",
+    "antd": "^4.16.3",
+    "auth0-js": "9.14.2",
+    "axios": "0.21.1",
+    "compare-versions": "^3.6.0",
+    "date-fns": "2.16.1",
+    "detect-browser": "^5.2.0",
+    "file-saver": "^2.0.5",
+    "http-status-codes": "2.1.4",
+    "node-sass": "^6.0.1",
+    "query-string": "6.13.8",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-router-dom": "5.2.0",
+    "react-scripts": "4.0.1",
+    "react-select": "4.0.2",
+    "typescript": "4.0.3",
+    "web-vitals": "0.2.4",
+    "xlsx": "^0.17.0"
+  },
+  "scripts": {
+    "proxy": "cd .. && ngrok http https://localhost:3000 -region=ap -hostname=proxy.keyreply.com",
+    "proxy1": "cd .. && ngrok http 4000 -region=ap -hostname=proxy2.keyreply.com",
+    "start": "react-scripts start",
+    "sass:build": " node-sass src/styles/sass/style.sass -o src/styles/css",
+    "sass:watch": "node-sass src/styles/sass/style.sass -o src/styles/css && node-sass src/styles/sass/style.sass -wo src/styles/css",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/auth0-js": "9.14.2",
+    "@types/file-saver": "^2.0.2",
+    "@types/lodash": "4.14.168",
+    "@types/react-router-dom": "5.1.7",
+    "@types/react-select": "4.0.11",
+    "@typescript-eslint/eslint-plugin": "4.13.0",
+    "@typescript-eslint/parser": "4.13.0",
+    "eslint": "7.18.0",
+    "eslint-plugin-react": "7.22.0"
+  }
+}

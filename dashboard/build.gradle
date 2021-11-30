@@ -1,0 +1,35 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+tasks.register("build", YarnTask) {
+    args = ["build"]
+}
+
+tasks.register("start", YarnTask) {
+	dependsOn build
+    args = ["start"]
+}
+
+task clean(type: Delete) {
+    delete "build"
+}
+
+// Docker
+String dockerImageTag = "${project.dockerRegistry}/${project.dockerRepo}/dashboard:${rootProject.version}"
+
+tasks.register("buildImage", DockerBuildImage) {
+    inputDir.set(file("."))
+    dockerFile.set(file("Dockerfile"))
+
+	// Set image tag
+	images.add(dockerImageTag)
+}
+
+tasks.register("pushImage", Exec) {
+	dependsOn buildImage
+
+    commandLine = ["docker", "push", "${dockerImageTag}"]
+}
+
+tasks.register("release") {
+    dependsOn pushImage
+}
